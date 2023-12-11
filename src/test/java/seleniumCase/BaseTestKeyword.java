@@ -1,10 +1,25 @@
 package seleniumCase;
 
+import java.io.IOException;
+
 public class BaseTestKeyword extends BaseTestAssert {
 
-    public void beymenTest(){
+    String keyword;
+
+    public void beymenSearchTest() {
         getUrl("https://www.beymen.com/");
         checkTitle("Beymen.com – Türkiye’nin Tek Dijital Lüks Platformu");
+        clickById("genderManButton");
+        clickById("onetrust-reject-all-handler");
+        keyword = getExcelRow(0);
+        clickByXpath("//input[@class='o-header__search--input']");
+        sendByName("qSugesstion",keyword);
+        clearByName("qSugesstion");
+        keyword = getExcelRow(1);
+        sendByNameAndEnter("qSugesstion",keyword);
+
+//        clickByXpath("//button[contains(text(),'ARA')]");
+
     }
     public void girisYap(String kullaniciAdi, String sifre) {
         checkTitle("GittiGidiyor - Türkiye'nin Öncü Alışveriş Sitesi");

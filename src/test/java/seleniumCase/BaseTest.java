@@ -1,16 +1,15 @@
 package seleniumCase;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.junit.After;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import seleniumCase.driver.Driver;
 
@@ -19,7 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class BaseTest extends Driver{
 
@@ -34,6 +32,20 @@ public class BaseTest extends Driver{
         logger.info("Url sayfasi acildi.");
     }
 
+    public String getExcelRow(int i)  {
+        Workbook workbook = null;
+        try {
+            workbook = new XSSFWorkbook("input.xlsx");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Sheet sheet = workbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        String temp = String.valueOf(row.getCell(i));
+
+        logger.info("Excelden "+ temp +" bilgisi okundu.");
+        return temp;
+    }
     private static String clearData(String data) {
         data = data.replaceAll("\n", "");
         data = data.replaceAll("TL", "");
@@ -63,6 +75,25 @@ public class BaseTest extends Driver{
     public void sendById(String id, String value) {
         webDriver.findElement(By.id(id)).sendKeys(value);
         logger.info("id bilgisi '" + id + "' olan elemente '" + value + "' değeri yazıldı.");
+    }
+
+    public void sendByName(String name, String value) {
+        webDriver.findElement(By.name(name)).sendKeys(value);
+        logger.info("Name bilgisi '" + name + "' olan elemente '" + value + "' değeri yazıldı.");
+    }
+
+    public void sendByNameAndEnter(String name, String value) {
+        webDriver.findElement(By.name(name)).sendKeys(value,Keys.ENTER);
+//        webDriver.findElement(By.name(name)).sendKeys(Keys.ENTER);
+        logger.info("Name bilgisi '" + name + "' olan elemente '" + value + "' değeri yazıldı.");
+    }
+
+    public void clearByName(String name) {
+        WebElement toClear = webDriver.findElement(By.name(name));
+        toClear.clear();
+        toClear.sendKeys(Keys.CONTROL + "a");
+        toClear.sendKeys(Keys.DELETE);
+        logger.info("Name bilgisi '" + name + "' olan element text alani temizlendi.'");
     }
 
     public void clickById(String id) {
@@ -114,7 +145,6 @@ public class BaseTest extends Driver{
     }
 
     public void randomSelectXpath(String xpath) {
-//        driver.get("https://www.gittigidiyor.com/arama?k=bilgisayar&sf=2");
         webDriver.navigate().refresh();
         List<WebElement> pageResult = webDriver.findElements(By.xpath(xpath));
         Random random = new Random();
