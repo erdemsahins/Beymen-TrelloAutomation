@@ -1,30 +1,33 @@
 package seleniumCase.driver;
 
 import org.apache.log4j.BasicConfigurator;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 
-
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class Driver {
 
     public static WebDriver webDriver;
+    public static WebDriverWait webDriverWait;
+    public final Logger logger = LogManager.getLogger(this.getClass());
 
-    @Before
-    public void initializeDriver(){
-        BasicConfigurator.configure();
+    @BeforeMethod
+    public static void initializeDriver() {
         webDriver = DriverFactory.getDriver();
-        webDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(15));
+        webDriverWait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
+        BasicConfigurator.configure();
     }
 
-    @After
-    public void closeDriver(){
+    @AfterMethod
+    public static void closeDriver() {
         webDriver.quit();
     }
-
 
 }

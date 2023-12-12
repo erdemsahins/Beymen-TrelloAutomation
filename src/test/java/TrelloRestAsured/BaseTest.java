@@ -15,8 +15,8 @@ import static io.restassured.RestAssured.given;
 
 public class BaseTest {
 
-    String APIKey = "403ce07a464c59ea7c4e709aee706240";
-    String APIToken = "f798b6569245aa7b97b997deb5a4954ace39b00eaa0581d007a6aa07d41dbffe";
+    String APIKey = "apikey";
+    String APIToken = "apitoken";
 
     public final Logger logger = LogManager.getLogger(this.getClass());
     public static String boardId;
